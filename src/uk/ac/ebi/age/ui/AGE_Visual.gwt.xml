@@ -14,8 +14,9 @@
  
   <inherits name="com.smartgwt.SmartGwt"/>
 
-  <!-- Specify the app entry point class.                         -->
+  <!-- Specify the app entry point class.                        
   <entry-point class='uk.ac.ebi.age.ui.client.AGE_Visual'/>
+   -->
 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>
