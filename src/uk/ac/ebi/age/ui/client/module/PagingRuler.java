@@ -25,7 +25,7 @@ public class PagingRuler extends HTMLFlow
   sb.append("<span class='pageRuler'>");
   
   if( pfx != null )
-   sb.append("<span class='pageRulerPrefix'>").append(pfx).append("</span>");
+   sb.append("<span class='pageRulerPrefix'>").append(pfx).append("</span>&nbsp;");
   
   sb.append("Page ").append(cpage).append(" of ").append(pages);
 
@@ -105,7 +105,7 @@ public class PagingRuler extends HTMLFlow
   }
   
   if( sfx != null )
-   sb.append("<span class='pageRulerSuffix'>").append(sfx).append("</span>");
+   sb.append("&nbsp;<span class='pageRulerSuffix'>").append(sfx).append("</span>");
 
   sb.append("</span>");
 
