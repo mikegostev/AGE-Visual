@@ -1,6 +1,8 @@
-/lib
-/war
 .settings
 .gwt
 .project
 .classpath
+/lib
+/war
+/target
+
