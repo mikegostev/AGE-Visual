@@ -1,0 +1,6 @@
+/lib
+/war
+.settings
+.gwt
+.project
+.classpath
