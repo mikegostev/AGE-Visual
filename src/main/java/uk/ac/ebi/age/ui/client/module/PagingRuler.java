@@ -31,7 +31,7 @@ public class PagingRuler extends HTMLFlow
 
   if( pages > 1 )
   {
-   sb.append("<span class='pagerSpacer'></span>Pages: ");
+   sb.append("<span class='pagerSpacer'>&nbsp;</span>Pages: ");
 
    addPageLink(1, cpage, sb);
 
