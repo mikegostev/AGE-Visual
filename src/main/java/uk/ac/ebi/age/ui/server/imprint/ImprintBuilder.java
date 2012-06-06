@@ -9,6 +9,7 @@ import uk.ac.ebi.age.model.AgeClass;
 import uk.ac.ebi.age.model.AgeFileAttribute;
 import uk.ac.ebi.age.model.AgeObject;
 import uk.ac.ebi.age.model.AgeObjectAttribute;
+import uk.ac.ebi.age.model.AgeRelation;
 import uk.ac.ebi.age.model.AgeRelationClass;
 import uk.ac.ebi.age.model.Attributed;
 import uk.ac.ebi.age.model.IdScope;
@@ -24,21 +25,29 @@ import uk.ac.ebi.age.ui.shared.imprint.NumericValue;
 import uk.ac.ebi.age.ui.shared.imprint.ObjectId;
 import uk.ac.ebi.age.ui.shared.imprint.ObjectImprint;
 import uk.ac.ebi.age.ui.shared.imprint.ObjectValue;
+import uk.ac.ebi.age.ui.shared.imprint.RelationImprint;
 import uk.ac.ebi.age.ui.shared.imprint.Scope;
 import uk.ac.ebi.age.ui.shared.imprint.StringValue;
 import uk.ac.ebi.age.ui.shared.imprint.Value;
 
 public class ImprintBuilder
 {
+ private static ImprintingHint defaultHint = new ImprintingHint();
+ 
  private Map<AgeObject,ObjectImprint> objMap = new HashMap<AgeObject, ObjectImprint>();
  private Map<Object,ClassImprint> classMap = new HashMap<Object,ClassImprint>();
 
- public ObjectImprint convert( AgeObject ageObj, int qualDep, int objAttrDep, int relDep )
+ public ObjectImprint convert( AgeObject ageObj)
  {
-  return convert( ageObj, 0, qualDep, objAttrDep, relDep );
+  return convert( ageObj, 0, 0, defaultHint );
+ }
+ 
+ public ObjectImprint convert( AgeObject ageObj, ImprintingHint hint)
+ {
+  return convert( ageObj, 0, 0, hint );
  }
 
- public ObjectImprint convert( AgeObject ageObj, int level, int qualDep, int objAttrDep, int relDep )
+ public ObjectImprint convert( AgeObject ageObj, int atLevel, int rlLevel, ImprintingHint hint )
  {
   ObjectImprint impr = objMap.get( ageObj );
   
@@ -58,21 +67,61 @@ public class ImprintBuilder
   
   impr.setScope( convertScope(ageObj.getIdScope() ) );
   
-  convertAttributes( impr, ageObj, level, qualDep, objAttrDep );
   
-  if( level < relDep )
-   convertRelations();
+  if( hint.isConvertAttributes() )
+   convertAttributes( impr, ageObj, atLevel, hint );
+  
+  if( hint.isConvertRelations() )
+   convertRelations( impr, ageObj, rlLevel, hint );
+  
   
   return impr;
  }
  
- private void convertRelations()
+ private void convertRelations(ObjectImprint impr, AgeObject ageObj, int level, ImprintingHint hint )
  {
-  // TODO Auto-generated method stub
+  if( ageObj.getRelations() == null )
+   return;
   
+  for( AgeRelation rel : ageObj.getRelations() )
+  {
+   ClassImprint rlClass=getClassImprint( rel.getAgeElClass() );
+   
+   RelationImprint rimp = new RelationImprint();
+   
+   rimp.setClassImprint(rlClass);
+
+   ObjectId tgtId = new ObjectId();
+   
+   AgeObject tgObj = rel.getTargetObject();
+   
+   tgtId.setObjectId(tgObj.getId());
+   
+   ModuleKey mk = tgObj.getModuleKey();
+   
+   tgtId.setClusterId( mk.getClusterId() );
+   tgtId.setModuleId(  mk.getModuleId() );
+
+   rimp.setTargetObjectId(tgtId);
+
+   if( hint.isResolveRelationsTarget() || level < hint.getRelationsDepth() )
+    rimp.setObjectImprint( convert(tgObj, 0, level+1, hint) );
+
+   if( hint.getRelationQualifiersDepth() > 0 )
+   {
+    int atDep = hint.getQualifiersDepth();
+    hint.setQualifiersDepth( hint.getRelationQualifiersDepth() );
+
+    convertAttributes(rimp, rel, 0, hint);
+
+    hint.setQualifiersDepth(atDep);
+   }
+   
+   impr.addRelation(rimp);
+  }
  }
 
- private void convertAttributes(AttributedImprint impr, Attributed ageAtd, int level, int qualDep, int objAttrDep )
+ private void convertAttributes(AttributedImprint impr, Attributed ageAtd, int level, ImprintingHint hint )
  {
   if( ageAtd.getAttributes() == null )
    return;
@@ -126,12 +175,17 @@ public class ImprintBuilder
     
     atImp.addValue( objv );
     
-    if( level < objAttrDep )
-     objv.setObjectImprint( convert(((AgeObjectAttribute)attr).getValue(), level+1, qualDep, objAttrDep, 0) );
+    if( hint.isResolveObjectAttributesTarget() )
+    {
+     boolean cvRls = hint.isConvertRelations();
+     hint.setConvertRelations(false);
+     objv.setObjectImprint( convert(((AgeObjectAttribute)attr).getValue(), level+1, 0, hint) );
+     hint.setConvertRelations(cvRls);
+    }
    }
    
-   if( level < qualDep )
-    convertAttributes( val, attr, level+1, qualDep, objAttrDep);
+   if( level < hint.getQualifiersDepth() )
+    convertAttributes( val, attr, level+1, hint );
 
   }
   

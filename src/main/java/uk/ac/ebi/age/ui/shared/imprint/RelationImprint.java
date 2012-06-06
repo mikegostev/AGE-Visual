@@ -62,4 +62,9 @@ public class RelationImprint implements ObjectImprintReference, AttributedImprin
  {
   this.classImprint = classImprint;
  }
+
+ public void setTargetObjectId(ObjectId tgtId)
+ {
+  id = tgtId;
+ }
 }
