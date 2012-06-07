@@ -53,4 +53,10 @@ public class MultiValueAttributeImprint implements AttributeImprint
   this.classImprint = classImprint;
  }
 
+ @Override
+ public List<Value> getValues()
+ {
+  return values;
+ }
+
 }

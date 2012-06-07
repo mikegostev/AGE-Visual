@@ -199,6 +199,7 @@ public class ImprintBuilder
   {
    clImp = new ClassImprint();
    
+   clImp.setId( (aCls.isCustom()?"CC":"DC")+aCls.getName() );
    clImp.setName( aCls.getName() );
    clImp.setCustom(aCls.isCustom());
    clImp.setType(ClassType.OBJECT);

@@ -2,6 +2,7 @@ package uk.ac.ebi.age.ui.shared.imprint;
 
 public class ClassImprint
 {
+ private String id;
  private String  name;
  private boolean custom;
  private ClassType type;
@@ -44,5 +45,15 @@ public class ClassImprint
  public ClassType getType()
  {
   return type;
+ }
+
+ public String getId()
+ {
+  return id;
+ }
+
+ public void setId(String id)
+ {
+  this.id = id;
  }
 }

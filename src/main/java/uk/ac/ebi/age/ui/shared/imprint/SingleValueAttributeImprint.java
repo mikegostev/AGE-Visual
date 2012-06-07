@@ -1,5 +1,8 @@
 package uk.ac.ebi.age.ui.shared.imprint;
 
+import java.util.Collections;
+import java.util.List;
+
 public class SingleValueAttributeImprint implements AttributeImprint
 {
  private Value value;
@@ -36,4 +39,11 @@ public class SingleValueAttributeImprint implements AttributeImprint
  {
   value = v;
  }
+
+ @Override
+ public List<Value> getValues()
+ {
+  return Collections.singletonList(value);
+ }
+ 
 }
