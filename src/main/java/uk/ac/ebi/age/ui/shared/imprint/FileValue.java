@@ -1,7 +1,12 @@
 package uk.ac.ebi.age.ui.shared.imprint;
 
-public class FileValue extends StringValue
+import java.io.Serializable;
+
+public class FileValue extends StringValue implements Serializable
 {
+
+ private static final long serialVersionUID = 1L;
+ 
  private boolean global;
 
  public FileValue(String fileId, boolean resolvedGlobal)

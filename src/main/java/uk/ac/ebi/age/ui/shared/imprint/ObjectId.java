@@ -1,7 +1,12 @@
 package uk.ac.ebi.age.ui.shared.imprint;
 
-public class ObjectId
+import java.io.Serializable;
+
+public class ObjectId implements Serializable
 {
+
+ private static final long serialVersionUID = 1L;
+ 
  private String clusterId;
  private String moduleId;
  private String objectId;

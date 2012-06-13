@@ -32,11 +32,35 @@ import uk.ac.ebi.age.ui.shared.imprint.Value;
 
 public class ImprintBuilder
 {
+ public interface StringProcessor
+ {
+  String process( String str );
+ }
+ 
  private static ImprintingHint defaultHint = new ImprintingHint();
  
  private Map<AgeObject,ObjectImprint> objMap = new HashMap<AgeObject, ObjectImprint>();
  private Map<Object,ClassImprint> classMap = new HashMap<Object,ClassImprint>();
 
+ private StringProcessor classNameProcessor;
+ private StringProcessor valueProcessor;
+ private StringProcessor idProcessor;
+ private StringProcessor fileNameProcessor;
+
+ public ImprintBuilder()
+ {}
+
+ public ImprintBuilder( StringProcessor classNameProcessor,
+                        StringProcessor valueProcessor,
+                        StringProcessor idProcessor,
+                        StringProcessor fileNameProcessor)
+ {
+  this.classNameProcessor=classNameProcessor;
+  this.valueProcessor=valueProcessor;
+  this.idProcessor=idProcessor;
+  this.fileNameProcessor=fileNameProcessor;
+ }
+ 
  public ObjectImprint convert( AgeObject ageObj)
  {
   return convert( ageObj, 0, 0, defaultHint );
@@ -80,7 +104,7 @@ public class ImprintBuilder
  
  private void convertRelations(ObjectImprint impr, AgeObject ageObj, int level, ImprintingHint hint )
  {
-  if( ageObj.getRelations() == null )
+  if( ageObj.getRelations() == null || ageObj.getRelations().size() == 0 )
    return;
   
   for( AgeRelation rel : ageObj.getRelations() )
@@ -102,6 +126,9 @@ public class ImprintBuilder
    tgtId.setClusterId( mk.getClusterId() );
    tgtId.setModuleId(  mk.getModuleId() );
 
+   if( idProcessor != null )
+    processId(tgtId);
+   
    rimp.setTargetObjectId(tgtId);
 
    if( hint.isResolveRelationsTarget() || level < hint.getRelationsDepth() )
@@ -123,7 +150,7 @@ public class ImprintBuilder
 
  private void convertAttributes(AttributedImprint impr, Attributed ageAtd, int level, ImprintingHint hint )
  {
-  if( ageAtd.getAttributes() == null )
+  if( ageAtd.getAttributes() == null || ageAtd.getAttributes().size() == 0 )
    return;
   
   Map<AgeAttributeClass, AttributeImprint> attrMap = new HashMap<AgeAttributeClass, AttributeImprint>();
@@ -141,6 +168,9 @@ public class ImprintBuilder
     atClass = getClassImprint( attr.getAgeElClass() );
     
     atImp.setClassImprint(atClass);
+    
+    attrMap.put(attr.getAgeElClass(), atImp);
+    impr.addAttribute(atImp);
    }
    else
     atClass = atImp.getClassImprint();
@@ -148,14 +178,22 @@ public class ImprintBuilder
    Value val = null;
    
    if( atClass.getType() == ClassType.ATTR_STRING )
-    atImp.addValue( val = new StringValue( attr.getValue().toString() ) );
+   {
+    String str = valueProcessor != null ? valueProcessor.process(attr.getValue().toString()) : attr.getValue().toString();
+   
+    atImp.addValue( val = new StringValue( str ) );
+   }
    else if( atClass.getType() == ClassType.ATTR_NUM )
+   {
     atImp.addValue( val = new NumericValue( attr.getValueAsDouble() ) );
+   }
    else if( atClass.getType() == ClassType.ATTR_FILE )
    {
     AgeFileAttribute fAttr = (AgeFileAttribute)attr;
     
-    atImp.addValue( val = new FileValue( fAttr.getFileId(), fAttr.isResolvedGlobal() ) );
+    String fName = fileNameProcessor!=null?fileNameProcessor.process(fAttr.getFileId()):fAttr.getFileId();
+    
+    atImp.addValue( val = new FileValue( fName, fAttr.isResolvedGlobal() ) );
    }
    else if( atClass.getType() == ClassType.ATTR_OBJECT )
    {
@@ -168,6 +206,9 @@ public class ImprintBuilder
     
     tgtId.setClusterId( mk.getClusterId());
     tgtId.setModuleId(  mk.getModuleId() );
+    
+    if( idProcessor != null )
+     processId(tgtId);
     
     ObjectValue objv = new ObjectValue( tgtId ) ;
     
@@ -186,9 +227,15 @@ public class ImprintBuilder
    
    if( level < hint.getQualifiersDepth() )
     convertAttributes( val, attr, level+1, hint );
-
   }
   
+ }
+
+ private void processId(ObjectId tgtId)
+ {
+  tgtId.setClusterId(idProcessor.process(tgtId.getClusterId()));
+  tgtId.setModuleId(idProcessor.process(tgtId.getModuleId()));
+  tgtId.setObjectId(idProcessor.process(tgtId.getObjectId()));
  }
 
  private ClassImprint getClassImprint( AgeClass aCls )
@@ -200,7 +247,7 @@ public class ImprintBuilder
    clImp = new ClassImprint();
    
    clImp.setId( (aCls.isCustom()?"CC":"DC")+aCls.getName() );
-   clImp.setName( aCls.getName() );
+   clImp.setName( classNameProcessor==null?aCls.getName() : classNameProcessor.process(aCls.getName()) );
    clImp.setCustom(aCls.isCustom());
    clImp.setType(ClassType.OBJECT);
    
@@ -218,7 +265,8 @@ public class ImprintBuilder
   {
    clImp = new ClassImprint();
    
-   clImp.setName( aCls.getName() );
+   clImp.setId( (aCls.isCustom()?"RCC":"RDC")+aCls.getName() );
+   clImp.setName( classNameProcessor==null?aCls.getName() : classNameProcessor.process(aCls.getName()) );
    clImp.setCustom(aCls.isCustom());
    clImp.setType(ClassType.RELATION);
    
@@ -238,8 +286,11 @@ public class ImprintBuilder
   
   clImp = new ClassImprint();
   
-  clImp.setName( ageElClass.getName() );
+  clImp.setName( classNameProcessor==null?ageElClass.getName() : classNameProcessor.process(ageElClass.getName()) );
+  clImp.setId( (ageElClass.isCustom()?"ACC":"ADC")+ageElClass.getName() );
   clImp.setCustom(ageElClass.isCustom());
+  
+  classMap.put(ageElClass, clImp);
   
   switch(ageElClass.getDataType())
   {

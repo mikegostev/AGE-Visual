@@ -1,10 +1,14 @@
 package uk.ac.ebi.age.ui.shared.imprint;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-public class SingleValueAttributeImprint implements AttributeImprint
+public class SingleValueAttributeImprint implements AttributeImprint, Serializable
 {
+
+ private static final long serialVersionUID = 1L;
+ 
  private Value value;
  private ClassImprint classImprint;
 

@@ -1,7 +1,12 @@
 package uk.ac.ebi.age.ui.shared.imprint;
 
-public class ObjectValue extends Value implements ObjectImprintReference
+import java.io.Serializable;
+
+public class ObjectValue extends Value implements ObjectImprintReference, Serializable
 {
+
+ private static final long serialVersionUID = 1L;
+ 
  private ObjectId id;
  private ObjectImprint object;
 

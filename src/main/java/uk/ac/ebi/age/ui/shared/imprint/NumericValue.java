@@ -1,8 +1,13 @@
 package uk.ac.ebi.age.ui.shared.imprint;
 
+import java.io.Serializable;
 
-public class NumericValue extends Value
+
+public class NumericValue extends Value implements Serializable
 {
+
+ private static final long serialVersionUID = 1L;
+ 
  private double value;
 
  public NumericValue()

@@ -1,10 +1,14 @@
 package uk.ac.ebi.age.ui.shared.imprint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiValueAttributeImprint implements AttributeImprint
+public class MultiValueAttributeImprint implements AttributeImprint, Serializable
 {
+
+ private static final long serialVersionUID = 1L;
+ 
  private List<Value> values = new ArrayList<Value>();
  private ClassImprint classImprint;
 

@@ -1,10 +1,14 @@
 package uk.ac.ebi.age.ui.shared.imprint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelationImprint implements ObjectImprintReference, AttributedImprint
+public class RelationImprint implements ObjectImprintReference, AttributedImprint, Serializable
 {
+
+ private static final long serialVersionUID = 1L;
+ 
  private ClassImprint classImprint;
  
  private ObjectId id;
