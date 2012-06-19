@@ -1,9 +1,10 @@
 package uk.ac.ebi.age.ui.shared.imprint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Value implements AttributedImprint
+public abstract class Value implements AttributedImprint, Serializable
 {
  private List<AttributeImprint> attrs;
 
