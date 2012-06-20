@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="AGEVisual" default="syncRes" basedir=".">
+    <description>AGE visual tools</description>
+  <!-- set global properties for this build -->
+
+	<target name="syncRes">
+
+		<sync todir="war">
+			<fileset dir="src/main/webapp"/>
+			<preserveintarget>
+				<include name="WEB-INF/**"/>
+			</preserveintarget>
+		</sync>
+
+	</target>
+  
+ </project>

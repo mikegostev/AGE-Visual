@@ -1,34 +1,27 @@
 /** Add css rules here for your application. */
-
-
-/** Example rules used by the template application (remove for your app) */
-h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
+.objectImprintViewerWindow
+{
+	font-size: 10pt;
+	font-family: Arial;
 }
 
-.sendButton {
-  display: block;
-  font-size: 16pt;
+.objectImprintViewerWindow .objectImprintViewerGridBody
+{
+	border-top: 1px solid #A0A0A0;
+	border-left: 1px solid #A0A0A0;
+	border-bottom: none;
+	border-right: none;
 }
 
-/** Most GWT widgets already have a style name defined */
-.gwt-DialogBox {
-  width: 400px;
+.objectImprintViewerGridBody .attrClassCol
+{
+	background-color: #F6F7F9;
+	border-bottom: 1px solid #A0A0A0;
+	border-right: 1px solid #A0A0A0;
 }
 
-.dialogVPanel {
-  margin: 5px;
-}
-
-.serverResponseLabelError {
-  color: red;
-}
-
-/** Set ids using widget.getElement().setId("idOfElement") */
-#closeButton {
-  margin: 15px 6px 6px;
+.objectImprintViewerGridBody .attrValCol
+{
+	border-bottom: 1px solid #A0A0A0;
+	border-right: 1px solid #A0A0A0;
 }
