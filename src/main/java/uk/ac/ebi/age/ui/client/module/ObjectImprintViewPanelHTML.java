@@ -1,6 +1,7 @@
 package uk.ac.ebi.age.ui.client.module;
 
 import uk.ac.ebi.age.ui.shared.imprint.AttributeImprint;
+import uk.ac.ebi.age.ui.shared.imprint.AttributedImprint;
 import uk.ac.ebi.age.ui.shared.imprint.ObjectId;
 import uk.ac.ebi.age.ui.shared.imprint.ObjectImprint;
 import uk.ac.ebi.age.ui.shared.imprint.ObjectValue;
@@ -11,8 +12,12 @@ import com.smartgwt.client.widgets.HTMLFlow;
 
 public class ObjectImprintViewPanelHTML extends HTMLFlow
 {
- public ObjectImprintViewPanelHTML( final ObjectImprint impr )
+ private int depth;
+ 
+ public ObjectImprintViewPanelHTML( final ObjectImprint impr, int depth )
  {
+  this.depth=depth;
+  
   String html = "<table style='width: 100%' class='objectViewTable'>"
     +"<colgroup>"
     +"<col/>"
@@ -42,7 +47,7 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
    
    if( ati.getValueCount() == 1 )
    {
-    html += representValue( ati.getValues().get(0) );
+    html += representValue( ati.getValues().get(0), 0 );
    }
    else
    {
@@ -53,7 +58,12 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
     {
      valn++;
 
-     html+="<tr><td>"+ representValue( v )+"</td></tr>";
+     if( valn == 0 )
+      html+="<tr class='firstRow'>";
+     else
+      html+="<tr>";
+     
+     html+="<td class='firstCell'>"+ representValue( v, 0 )+"</td></tr>";
     }
     
     html+="</table>";
@@ -72,7 +82,7 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
   setContents( html );
  }
  
- private String representValue(Value value)
+ private String representValue(Value value, int lvl)
  {
   String str = "";
   
@@ -80,10 +90,63 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
   {
    ObjectValue ov = (ObjectValue)value;
    
-   if( ov.getObjectImprint() != null )
-   {}
+   if( ov.getObjectImprint() != null && lvl < depth )
+   {
+    str+="<table class='embeddedObject'><tr class='firstRow'><td class='firstCell'>";
+    str+="<a href='javascript:linkClicked(\"showObject\",\""+ov.getTargetObjectId()+"\")'>"+ov.getTargetObjectClass().getName()+"</a>";
+    str+="<td>"+representAttributed(ov.getObjectImprint(),lvl+1)+"</td></tr></table>";
+   }
   }
   
+  return str;
+ }
+ 
+ private String representAttributed( AttributedImprint ati, int lvl )
+ {
+  String str = "";
+
+  str += "<table>";
+
+  int i = -1;
+
+  for(AttributeImprint at : ati.getAttributes())
+  {
+   i++;
+
+   if(i == 0)
+    str += "<tr class='firstRow'>";
+   else
+    str += "<tr>";
+
+   str += "<td class='firstCell'>" + at.getClassImprint().getName() + ":&nbsp;</td><td>";
+
+   if(at.getValueCount() == 1)
+   {
+    str += representValue(at.getValues().get(0), lvl+1);
+   }
+   else
+   {
+    str += "<table class='valuesTable'>";
+
+    int valn = -1;
+    for(Value v : at.getValues())
+    {
+     valn++;
+
+     if(valn == 0)
+      str += "<tr class='firstRow'>";
+     else
+      str += "<tr>";
+
+     str += "<td class='firstCell'>" + representValue(v, lvl+1) + "</td></tr>";
+    }
+
+    str += "</table>";
+   }
+
+   str += "</td></tr>";
+  }
+
   return str;
  }
 

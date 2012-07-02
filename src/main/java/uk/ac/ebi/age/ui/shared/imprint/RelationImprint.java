@@ -12,7 +12,9 @@ public class RelationImprint implements ObjectImprintReference, AttributedImprin
  private ClassImprint classImprint;
  
  private ObjectId id;
- private ObjectImprint object;
+ private ObjectImprint object; 
+ private ClassImprint targetObjectClass;
+
 
  private List<AttributeImprint> attrs;
 
@@ -70,5 +72,16 @@ public class RelationImprint implements ObjectImprintReference, AttributedImprin
  public void setTargetObjectId(ObjectId tgtId)
  {
   id = tgtId;
+ }
+
+ @Override
+ public ClassImprint getTargetObjectClass()
+ {
+  return targetObjectClass;
+ }
+
+ public void setTargetObjectClass(ClassImprint targetObjectClass)
+ {
+  this.targetObjectClass = targetObjectClass;
  }
 }

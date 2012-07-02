@@ -120,6 +120,7 @@ public class ImprintBuilder
    AgeObject tgObj = rel.getTargetObject();
    
    tgtId.setObjectId(tgObj.getId());
+   rimp.setTargetObjectClass(getClassImprint( tgObj.getAgeElClass() ) );
    
    ModuleKey mk = tgObj.getModuleKey();
    
@@ -211,6 +212,7 @@ public class ImprintBuilder
      processId(tgtId);
     
     ObjectValue objv = new ObjectValue( tgtId ) ;
+    objv.setTargetObjectClass( getClassImprint(((AgeObjectAttribute)attr).getValue().getAgeElClass()) );
     
     val = objv;
     

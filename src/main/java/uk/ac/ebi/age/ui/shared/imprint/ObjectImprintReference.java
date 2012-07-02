@@ -7,4 +7,6 @@ public interface ObjectImprintReference
  void setObjectImprint(ObjectImprint obj);
  
  ObjectId getTargetObjectId();
+ 
+ ClassImprint getTargetObjectClass();
 }

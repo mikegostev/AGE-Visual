@@ -9,6 +9,7 @@ public class ObjectValue extends Value implements ObjectImprintReference, Serial
  
  private ObjectId id;
  private ObjectImprint object;
+ private ClassImprint targetClass;
 
  public ObjectValue()
  {}
@@ -40,6 +41,17 @@ public class ObjectValue extends Value implements ObjectImprintReference, Serial
  public ObjectId getTargetObjectId()
  {
   return id;
+ }
+
+ @Override
+ public ClassImprint getTargetObjectClass()
+ {
+  return targetClass;
+ }
+
+ public void setTargetObjectClass(ClassImprint targetClass)
+ {
+  this.targetClass = targetClass;
  }
 
 }
