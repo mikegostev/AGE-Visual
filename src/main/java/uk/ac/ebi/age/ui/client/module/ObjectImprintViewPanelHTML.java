@@ -1,5 +1,7 @@
 package uk.ac.ebi.age.ui.client.module;
 
+import java.util.List;
+
 import uk.ac.ebi.age.ui.shared.imprint.AttributeImprint;
 import uk.ac.ebi.age.ui.shared.imprint.AttributedImprint;
 import uk.ac.ebi.age.ui.shared.imprint.ObjectId;
@@ -86,11 +88,16 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
  {
   String str = "";
   
+  List<AttributeImprint> quals = value.getAttributes();
+  
+  if( quals != null && quals.size() ==0 )
+   quals = null;
+  
   if( value instanceof ObjectValue )
   {
    ObjectValue ov = (ObjectValue)value;
    
-   if( ov.getObjectImprint() != null && lvl < depth )
+   if( ov.getObjectImprint() != null && lvl < depth && quals == null )
    {
     str+="<table class='embeddedObject'><tr class='firstRow'><td class='firstCell'>";
     str+="<a href='javascript:linkClicked(\"showObject\",\""+ov.getTargetObjectId()+"\")'>"+ov.getTargetObjectClass().getName()+"</a>";
