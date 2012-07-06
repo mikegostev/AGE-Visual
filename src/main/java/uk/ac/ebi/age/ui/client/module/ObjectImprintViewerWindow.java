@@ -23,7 +23,7 @@ public class ObjectImprintViewerWindow extends Window
   
   setStyleName("objectImprintViewerWindow");
 
-  addItem( new ObjectImprintViewPanel(impr) );
+  addItem( new ObjectImprintViewPanelHTML(impr,3,"target") );
 
   centerInPage();
 

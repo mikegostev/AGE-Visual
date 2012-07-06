@@ -14,77 +14,29 @@ import com.smartgwt.client.widgets.HTMLFlow;
 
 public class ObjectImprintViewPanelHTML extends HTMLFlow
 {
+ private static int count=1;
+ 
+ public enum RefType
+ {
+  OBJ,
+  QUAL
+ }
+ 
  private int depth;
  
- public ObjectImprintViewPanelHTML( final ObjectImprint impr, int depth )
+ public ObjectImprintViewPanelHTML( final ObjectImprint impr, int depth, String clickTarget )
  {
   this.depth=depth;
   
-  String html = "<table style='width: 100%' class='objectViewTable'>"
-    +"<colgroup>"
-    +"<col/>"
-    +"<col/>"
-    +"<col/>"
-    +"</colgroup>";
-  
-  int atn=-1;
-  for( AttributeImprint ati :  impr.getAttributes() )
-  {
-   atn++;
-   
-   html+="<tr";
-   
-   if( atn == 0 )
-    html+=" class='firstRow'";
-   
-   html+="><td class='firstCell ";
-   
-   
-   if( ati.getClassImprint().isCustom() )
-    html += "ageCustomClassRef";
-   else
-    html += "ageDefinedClassRef";
-   
-   html+= "'>"+ati.getClassImprint().getName()+":&nbsp;</td><td>";
-   
-   if( ati.getValueCount() == 1 )
-   {
-    html += representValue( ati.getValues().get(0), 0 );
-   }
-   else
-   {
-    html+="<table class='valuesTable'>";
-
-    int valn = -1;
-    for(Value v : ati.getValues())
-    {
-     valn++;
-
-     if( valn == 0 )
-      html+="<tr class='firstRow'>";
-     else
-      html+="<tr>";
-     
-     html+="<td class='firstCell'>"+ representValue( v, 0 )+"</td></tr>";
-    }
-    
-    html+="</table>";
-   }
-   
-   html+="</td></tr>";
-  }
-  
-  html += "</table>";
-  
-  
+ 
   setOverflow(Overflow.VISIBLE);
   setWidth100();
   setPadding(2);
   
-  setContents( html );
+  setContents( representAttributed(impr, 0, "objectView", "", clickTarget) );
  }
  
- private String representValue(Value value, int lvl)
+ private String representValue(Value value, int lvl, String pathPfx, String clickTarget)
  {
   String str = "";
   
@@ -97,22 +49,31 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
   {
    ObjectValue ov = (ObjectValue)value;
    
-   if( ov.getObjectImprint() != null && lvl < depth && quals == null )
+   ObjectImprint obj = ov.getObjectImprint();
+   
+   if( ov.getObjectImprint() != null && lvl < depth && quals == null && obj.getAttributes() != null && obj.getAttributes().size() <= 5 )
    {
-    str+="<table class='embeddedObject'><tr class='firstRow'><td class='firstCell'>";
-    str+="<a href='javascript:linkClicked(\"showObject\",\""+ov.getTargetObjectId()+"\")'>"+ov.getTargetObjectClass().getName()+"</a>";
-    str+="<td>"+representAttributed(ov.getObjectImprint(),lvl+1)+"</td></tr></table>";
+    str+="<table class='objectValue' style='width: 100%'><tr class='firstRow'><td class='firstCell' style='text-align: center'>";
+    str+=ov.getTargetObjectClass().getName()+"</td>";
+    str+="<td style='padding: 0'>"+representAttributed(ov.getObjectImprint(),lvl+1, "objectEmbedded", pathPfx, clickTarget)+"</td></tr></table>";
+   }
+   else
+   {
+    str+="<div class='valueString'><a href='javascript:linkClicked(\""+clickTarget+"\",["+RefType.OBJ.ordinal()+pathPfx+"])'>"+ov.getTargetObjectClass().getName()+"</a>" +
+            "<br>("+ov.getTargetObjectId()+")</div>";
    }
   }
+  else
+   str+="<div class='valueString'>"+value.getStringValue()+"</div>";
   
   return str;
  }
  
- private String representAttributed( AttributedImprint ati, int lvl )
+ private String representAttributed( AttributedImprint ati, int lvl, String tblClass, String pathPfx, String clickTarget )
  {
   String str = "";
 
-  str += "<table>";
+  str += "<table style='width: 100%' class='"+tblClass+"'>";
 
   int i = -1;
 
@@ -125,11 +86,41 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
    else
     str += "<tr>";
 
-   str += "<td class='firstCell'>" + at.getClassImprint().getName() + ":&nbsp;</td><td>";
+   str += "<td class='firstCell attrName'>" + at.getClassImprint().getName() + ":&nbsp;</td>";
 
+   
    if(at.getValueCount() == 1)
    {
-    str += representValue(at.getValues().get(0), lvl+1);
+    Value val = at.getValues().get(0);
+    
+    List<AttributeImprint> quals = val.getAttributes();
+    
+    if( quals != null && quals.size() == 0 )
+     quals = null;
+    
+    if( quals != null )
+     str+="<td>";
+    else
+     str+="<td colspan='2'>";
+    
+    String path = pathPfx+","+i+",0";
+    
+    str += representValue(val, lvl, path, clickTarget);
+    
+    str+="</td>";
+    
+    if( quals != null )
+    {
+     str+="<td style='padding: 0'>";
+     
+     if( lvl < depth )
+      str+=representAttributed(val, lvl+1, "qualifiersEmbedded", path, clickTarget);
+     else
+      str+="<a href='javascript:linkClicked(\""+clickTarget+"\",["+RefType.QUAL.ordinal()+path+"])'>Q</a>";
+
+     str+="</td>";
+    }
+
    }
    else
    {
@@ -144,15 +135,45 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
       str += "<tr class='firstRow'>";
      else
       str += "<tr>";
+     
+     List<AttributeImprint> quals = v.getAttributes();
+    
+     if( quals != null && quals.size() == 0 )
+      quals = null;
+     
+     if( quals != null )
+      str+="<td class='firstCell'>";
+     else
+      str+="<td class='firstCell' colspan='2'>";
 
-     str += "<td class='firstCell'>" + representValue(v, lvl+1) + "</td></tr>";
+     String path = pathPfx+","+i+","+valn;
+     
+     str += representValue(v, lvl, path, clickTarget);
+     
+     str+="</td>";
+     
+     if( quals != null )
+     {
+      str+="<td style='padding: 0'>";
+      
+      if( lvl < depth )
+       str+=representAttributed(v, lvl+1, "qualifiersEmbedded", path, clickTarget);
+      else
+       str+="<a href='javascript:linkClicked(\""+clickTarget+"\",["+RefType.QUAL.ordinal()+path+"])'>Q</a>";
+
+      str+="</td>";
+     }
+
+     str+="</tr>";
     }
 
     str += "</table>";
    }
 
-   str += "</td></tr>";
+   str += "</tr>";
   }
+ 
+  str += "</table>";
 
   return str;
  }
