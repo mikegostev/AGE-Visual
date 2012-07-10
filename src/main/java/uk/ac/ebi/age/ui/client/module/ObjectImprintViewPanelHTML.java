@@ -24,7 +24,7 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
  
  private int depth;
  
- public ObjectImprintViewPanelHTML( final ObjectImprint impr, int depth, String clickTarget )
+ public ObjectImprintViewPanelHTML( final AttributedImprint impr, int depth, String clickTarget )
  {
   this.depth=depth;
   
@@ -51,20 +51,29 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
    
    ObjectImprint obj = ov.getObjectImprint();
    
+   String ref = pathPfx+","+RefType.OBJ.ordinal();
+   
    if( ov.getObjectImprint() != null && lvl < depth && quals == null && obj.getAttributes() != null && obj.getAttributes().size() <= 5 )
    {
     str+="<table class='objectValue' style='width: 100%'><tr class='firstRow'><td class='firstCell' style='text-align: center'>";
     str+=ov.getTargetObjectClass().getName()+"</td>";
-    str+="<td style='padding: 0'>"+representAttributed(ov.getObjectImprint(),lvl+1, "objectEmbedded", pathPfx, clickTarget)+"</td></tr></table>";
+    str+="<td style='padding: 0'>"+representAttributed(ov.getObjectImprint(),lvl+1, "objectEmbedded", ref, clickTarget)+"</td></tr></table>";
    }
    else
    {
-    str+="<div class='valueString'><a href='javascript:linkClicked(\""+clickTarget+"\",["+RefType.OBJ.ordinal()+pathPfx+"])'>"+ov.getTargetObjectClass().getName()+"</a>" +
-            "<br>("+ov.getTargetObjectId()+")</div>";
+    str+="<div class='valueString'><a href='javascript:linkClicked(\""+clickTarget+"\",["+ref+"])'>"+ov.getTargetObjectClass().getName()+"</a>" +
+            "<br>("+ov.getTargetObjectId().getObjectId()+")</div>";
    }
   }
   else
-   str+="<div class='valueString'>"+value.getStringValue()+"</div>";
+  {
+   String val = value.getStringValue();
+   
+   if( val.length() > 10 && val.substring(0, 5).equalsIgnoreCase("http:") )
+    val = "<a target='_blank' href='"+val+"'>"+val+"</a>";
+   
+   str+="<div class='valueString'>"+val+"</div>";
+  }
   
   return str;
  }
@@ -103,7 +112,12 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
     else
      str+="<td colspan='2'>";
     
-    String path = pathPfx+","+i+",0";
+    String path = pathPfx;
+    
+    if( path.length() > 0 )
+     path+=",";
+    
+    path += i+",0";
     
     str += representValue(val, lvl, path, clickTarget);
     
@@ -111,12 +125,14 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
     
     if( quals != null )
     {
-     str+="<td style='padding: 0'>";
+     str+="<td style='padding: 0; width: 1%'>";
+     
+     String ref = path+","+RefType.QUAL.ordinal();
      
      if( lvl < depth )
-      str+=representAttributed(val, lvl+1, "qualifiersEmbedded", path, clickTarget);
+      str+=representAttributed(val, lvl+1, "qualifiersEmbedded", ref, clickTarget);
      else
-      str+="<a href='javascript:linkClicked(\""+clickTarget+"\",["+RefType.QUAL.ordinal()+path+"])'>Q</a>";
+      str+="<a href='javascript:linkClicked(\""+clickTarget+"\",["+ref+"])'><img src='AGEVisual/icons/Q.png'></a>";
 
      str+="</td>";
     }
@@ -146,7 +162,12 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
      else
       str+="<td class='firstCell' colspan='2'>";
 
-     String path = pathPfx+","+i+","+valn;
+     String path = pathPfx;
+     
+     if( path.length() > 0 )
+      path+=",";
+
+     path = i+","+valn+","+RefType.QUAL.ordinal();
      
      str += representValue(v, lvl, path, clickTarget);
      
@@ -159,7 +180,7 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
       if( lvl < depth )
        str+=representAttributed(v, lvl+1, "qualifiersEmbedded", path, clickTarget);
       else
-       str+="<a href='javascript:linkClicked(\""+clickTarget+"\",["+RefType.QUAL.ordinal()+path+"])'>Q</a>";
+       str+="<a href='javascript:linkClicked(\""+clickTarget+"\",["+path+"])'><img src='AGEVisual/icons/Q.png'></a>";
 
       str+="</td>";
      }
