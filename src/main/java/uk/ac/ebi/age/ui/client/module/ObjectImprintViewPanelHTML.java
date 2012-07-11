@@ -140,7 +140,7 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
    }
    else
    {
-    str += "<table class='valuesTable'>";
+    str += "<td colspan='2' style='padding: 0'><table class='valuesTable' style='padding: 0; width: 100%; margin: 0; border-collapse: collapse'>";
 
     int valn = -1;
     for(Value v : at.getValues())
@@ -188,7 +188,7 @@ public class ObjectImprintViewPanelHTML extends HTMLFlow
      str+="</tr>";
     }
 
-    str += "</table>";
+    str += "</table></td>";
    }
 
    str += "</tr>";
