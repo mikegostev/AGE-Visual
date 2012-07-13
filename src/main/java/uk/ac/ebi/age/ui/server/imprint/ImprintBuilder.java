@@ -109,6 +109,9 @@ public class ImprintBuilder
   
   for( AgeRelation rel : ageObj.getRelations() )
   {
+   if( rel.getAgeElClass().isImplicit() && ! hint.isConvertImplicitRelations())
+    continue;
+   
    ClassImprint rlClass=getClassImprint( rel.getAgeElClass() );
    
    RelationImprint rimp = new RelationImprint();
@@ -132,7 +135,7 @@ public class ImprintBuilder
    
    rimp.setTargetObjectId(tgtId);
 
-   if( hint.isResolveRelationsTarget() || level < hint.getRelationsDepth() )
+   if( hint.isResolveRelationsTarget() && level < hint.getRelationsDepth() )
     rimp.setObjectImprint( convert(tgObj, 0, level+1, hint) );
 
    if( hint.getRelationQualifiersDepth() > 0 )

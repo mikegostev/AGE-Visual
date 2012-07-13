@@ -9,6 +9,7 @@ public class ImprintingHint
  private int     relationsDepth                = 1;
  private boolean resolveRelationsTarget        = false;
  private boolean resolveObjectAttributesTarget = false;
+ private boolean convertImplicitRelations      = false;
 
  public boolean isConvertAttributes()
  {
@@ -78,5 +79,15 @@ public class ImprintingHint
  public void setRelationQualifiersDepth(int relationQualifiersDepth)
  {
   this.relationQualifiersDepth = relationQualifiersDepth;
+ }
+
+ public boolean isConvertImplicitRelations()
+ {
+  return convertImplicitRelations;
+ }
+
+ public void setConvertImplicitRelations(boolean convertImplicitRelations)
+ {
+  this.convertImplicitRelations = convertImplicitRelations;
  }
 }
