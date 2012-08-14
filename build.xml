@@ -16,12 +16,15 @@
 	 
 	<target name="deps" description="download dependences jars" >
 
-	 	<artifact:dependencies filesetId="dependency.fileset">
+ 		<artifact:remoteRepository id="smartgwt" url="http://www.smartclient.com/maven2" />
+	 	<artifact:dependencies filesetId="build.fileset">
+
+	 		<remoteRepository refid="smartgwt" />
 
 			<dependency
 				groupId="com.smartgwt"
 				artifactId="smartgwt"
-				version="[2.4,)"
+				version="[3.0,)"
 			/>
 	 	 	
 
@@ -29,8 +32,8 @@
 	 	</artifact:dependencies>
 
 
-	 	<copy todir="lib">
-	 	  <fileset refid="dependency.fileset" />
+	 	<copy todir="buildlib">
+	 	  <fileset refid="build.fileset" />
 	 	  <!-- This mapper strips off all leading directory information -->
 	 	  <mapper type="flatten" />
 	 	</copy>

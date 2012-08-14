@@ -16,8 +16,8 @@ public class LinkManager
  
  private static LinkManager instance;
  
- private Map<String, LinkClickListener> lsnrs = new TreeMap<String, LinkClickListener>();
- private Map<String, LinkClickListenerJSO> lsnrsJSO = new TreeMap<String, LinkClickListenerJSO>();
+ private final Map<String, LinkClickListener> lsnrs = new TreeMap<String, LinkClickListener>();
+ private final Map<String, LinkClickListenerJSO> lsnrsJSO = new TreeMap<String, LinkClickListenerJSO>();
  
  private static native void init()
  /*-{

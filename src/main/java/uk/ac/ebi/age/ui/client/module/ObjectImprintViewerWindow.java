@@ -17,8 +17,8 @@ import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
-import com.smartgwt.client.widgets.events.CloseClientEvent;
 import com.smartgwt.client.widgets.events.DrawEvent;
 import com.smartgwt.client.widgets.events.DrawHandler;
 
@@ -85,7 +85,7 @@ public class ObjectImprintViewerWindow extends Window
   addCloseClickHandler( new CloseClickHandler()
   {
    @Override
-   public void onCloseClick(CloseClientEvent event)
+   public void onCloseClick(CloseClickEvent event)
    {
     destroy();
     LinkManager.getInstance().removeLinkClickListener(target1);
@@ -165,6 +165,7 @@ public class ObjectImprintViewerWindow extends Window
  }
  
  
+ @Override
  public void show()
  {
 //  setLeft(-1000);
