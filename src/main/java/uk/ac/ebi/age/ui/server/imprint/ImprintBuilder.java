@@ -32,15 +32,11 @@ import uk.ac.ebi.age.ui.shared.imprint.Value;
 
 public class ImprintBuilder
 {
- public interface StringProcessor
- {
-  String process( String str );
- }
- 
+
  private static ImprintingHint defaultHint = new ImprintingHint();
  
- private Map<AgeObject,ObjectImprint> objMap = new HashMap<AgeObject, ObjectImprint>();
- private Map<Object,ClassImprint> classMap = new HashMap<Object,ClassImprint>();
+ private final Map<AgeObject,ObjectImprint> objMap = new HashMap<AgeObject, ObjectImprint>();
+ private final Map<Object,ClassImprint> classMap = new HashMap<Object,ClassImprint>();
 
  private StringProcessor classNameProcessor;
  private StringProcessor valueProcessor;
