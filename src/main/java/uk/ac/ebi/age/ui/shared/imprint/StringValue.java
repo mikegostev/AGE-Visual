@@ -29,4 +29,9 @@ public class StringValue extends Value implements Serializable
   return value;
  }
 
+ @Override
+ public String toString()
+ {
+  return value;
+ }
 }
