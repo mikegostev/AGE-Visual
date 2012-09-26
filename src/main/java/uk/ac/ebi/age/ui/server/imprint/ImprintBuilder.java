@@ -1,6 +1,8 @@
 package uk.ac.ebi.age.ui.server.imprint;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import uk.ac.ebi.age.model.AgeAttribute;
@@ -20,6 +22,7 @@ import uk.ac.ebi.age.ui.shared.imprint.AttributedImprint;
 import uk.ac.ebi.age.ui.shared.imprint.ClassImprint;
 import uk.ac.ebi.age.ui.shared.imprint.ClassType;
 import uk.ac.ebi.age.ui.shared.imprint.FileValue;
+import uk.ac.ebi.age.ui.shared.imprint.Imprint;
 import uk.ac.ebi.age.ui.shared.imprint.MultiValueAttributeImprint;
 import uk.ac.ebi.age.ui.shared.imprint.NumericValue;
 import uk.ac.ebi.age.ui.shared.imprint.ObjectId;
@@ -56,6 +59,35 @@ public class ImprintBuilder
   this.idProcessor=idProcessor;
   this.fileNameProcessor=fileNameProcessor;
  }
+ 
+ public static Imprint convert( List<AgeObject> objs, ImprintingHint hint,
+   StringProcessor classNameProcessor,
+   StringProcessor valueProcessor,
+   StringProcessor idProcessor,
+   StringProcessor fileNameProcessor)
+
+ {
+  Imprint imp = new Imprint();
+  
+  ImprintBuilder bld = new ImprintBuilder( classNameProcessor, valueProcessor, idProcessor, fileNameProcessor );
+  
+  List<ObjectImprint> impobj = new ArrayList<ObjectImprint>( objs.size() );
+  
+  for( AgeObject o : objs )
+   impobj.add( bld.convert( o, hint ) );
+  
+  imp.setObjects(impobj);
+
+  HashMap<String, ClassImprint> clsMap = new HashMap<String, ClassImprint>();
+  
+  for( ClassImprint cl : bld.classMap.values() )
+   clsMap.put(cl.getId(), cl);
+  
+  imp.setClasses(clsMap);
+  
+  return imp;
+ }
+ 
  
  public ObjectImprint convert( AgeObject ageObj)
  {
@@ -247,7 +279,7 @@ public class ImprintBuilder
   {
    clImp = new ClassImprint();
    
-   clImp.setId( (aCls.isCustom()?"CC":"DC")+aCls.getName() );
+   clImp.setId( (aCls.isCustom()?"CO_":"DO_")+aCls.getName() );
    clImp.setName( classNameProcessor==null?aCls.getName() : classNameProcessor.process(aCls.getName()) );
    clImp.setCustom(aCls.isCustom());
    clImp.setType(ClassType.OBJECT);
@@ -266,7 +298,7 @@ public class ImprintBuilder
   {
    clImp = new ClassImprint();
    
-   clImp.setId( (aCls.isCustom()?"RCC":"RDC")+aCls.getName() );
+   clImp.setId( (aCls.isCustom()?"CR_":"DR_")+aCls.getName() );
    clImp.setName( classNameProcessor==null?aCls.getName() : classNameProcessor.process(aCls.getName()) );
    clImp.setCustom(aCls.isCustom());
    clImp.setType(ClassType.RELATION);
@@ -288,7 +320,7 @@ public class ImprintBuilder
   clImp = new ClassImprint();
   
   clImp.setName( classNameProcessor==null?ageElClass.getName() : classNameProcessor.process(ageElClass.getName()) );
-  clImp.setId( (ageElClass.isCustom()?"ACC":"ADC")+ageElClass.getName() );
+  clImp.setId( (ageElClass.isCustom()?"CA_":"DA_")+ageElClass.getName() );
   clImp.setCustom(ageElClass.isCustom());
   
   classMap.put(ageElClass, clImp);
