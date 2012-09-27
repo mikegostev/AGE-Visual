@@ -60,6 +60,12 @@ public class ImprintBuilder
   this.fileNameProcessor=fileNameProcessor;
  }
  
+ public static Imprint convert( List<AgeObject> objs )
+ {
+  return convert(objs, defaultHint, null, null, null, null);
+ }
+
+ 
  public static Imprint convert( List<AgeObject> objs, ImprintingHint hint,
    StringProcessor classNameProcessor,
    StringProcessor valueProcessor,
