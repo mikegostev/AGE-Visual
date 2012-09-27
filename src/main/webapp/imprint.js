@@ -53,9 +53,10 @@ AttributeImprint.prototype =
 }
 
 
-RelationImprint = function( cls, tgtId, tgt, attrs)
+RelationImprint = function( cls, tgtCls, tgtId, tgt, attrs)
 {
 	 this.cls=cls;
+	 this.tgtCls=tgtCls;
 	 this.attrs = attrs;
 	 this.targetId=tgtId;
 	 this.target = tgt;
@@ -65,8 +66,9 @@ RelationImprint.prototype =
 {
 		getAttributes: function() { return this.attrs; },
 		getClass: function() { return this.cls; },
+		getTargetObjectClass: function() { return this.tgtCls; },
 		getTargetId: function() { return this.targetId; },
-		getTarget: function() { return this.target; }
+		getTargetObject: function() { return this.target; }
 }
 
 ValueImprint = function( val, attrs )
@@ -78,6 +80,24 @@ ValueImprint = function( val, attrs )
 ValueImprint.prototype = 
 {
 		get: function() { return this.val; },
+		
+		getAttributes: function() { return this.attrs; },
+
+}
+
+ObjectValueImprint = function( tgtCls, tgtId, tgtObj, attrs )
+{
+ this.tgtId=tgtId;
+ this.tgtCls=tgtCls;
+ this.tgtObj=tgtObj;
+ this.attrs = attrs;
+}
+
+ObjectValueImprint.prototype = 
+{
+		getTargetId: function() { return this.tgtId; },
+		getTargetObjectClass: function() { return this.tgtCls; },
+		getTargetObject: function() { return this.tgtObj; },
 		
 		getAttributes: function() { return this.attrs; },
 
