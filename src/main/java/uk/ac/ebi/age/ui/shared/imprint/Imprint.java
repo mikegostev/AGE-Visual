@@ -8,8 +8,9 @@ public class Imprint implements Serializable
 {
  private static final long serialVersionUID = 1L;
  
- List<ObjectImprint>       objects;
- Map<String, ClassImprint> classes;
+ private List<ObjectImprint>       objects;
+ private Map<String, ClassImprint> classes;
+ private int totalRecords;
 
  public List<ObjectImprint> getObjects()
  {
@@ -31,4 +32,13 @@ public class Imprint implements Serializable
   this.classes = classes;
  }
 
+ public int getTotalObjects()
+ {
+  return totalRecords;
+ }
+ 
+ public void setTotalObjects(int totalRecords)
+ {
+  this.totalRecords = totalRecords;
+ }
 }

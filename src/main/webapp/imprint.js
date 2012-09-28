@@ -109,3 +109,24 @@ IdImprint = function( clustId, modId, objId )
 	this.moduleId = modId;
 	this.objectId = objId;
 }
+
+IdImprint.prototype = 
+{
+ getClusterId: function() { return this.clusterId ; },
+ getModuleId: function() { return this.moduleId ; },
+ getObjectId: function(){ return this.objectId ; }
+}
+
+DataBlock = function( data, classes, total )
+{
+	this.data = data;
+	this.classes = classes;
+	this.total=total;
+}
+
+DataBlock.prototype = 
+{
+ getData: function() { return this.data; },
+ getClasses: function() { return this.classes; },
+ getTotal: function(){ return this.total; } 
+}

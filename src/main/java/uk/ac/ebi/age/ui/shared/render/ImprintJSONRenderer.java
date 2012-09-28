@@ -31,7 +31,7 @@ public class ImprintJSONRenderer
     else
      app.append(",\n");
 
-    app.append("\"").append(cimp.getId()).append("\": new ClassImprint(\"").append(cimp.getId()).append("\",\"").append(cimp.getType().name())
+    app.append("\"").append(cimp.getId()).append("\": new ClassImprint(\"").append(cimp.getName()).append("\",\"").append(cimp.getType().name())
       .append("\",").append(cimp.isCustom() ? "true" : "false").append(")");
    }
   }
@@ -52,7 +52,7 @@ public class ImprintJSONRenderer
    }
   }
   
-  app.append("]\n\ndataArrived(data);\n})();\n}");
+  app.append("]\n\ndataArrived(new DataBlock(data,classes,"+imp.getTotalObjects()+"));\n})();\n}");
  }
  
  private static void appendObject( ObjectImprint oi, Appendable app, String indent) throws IOException
