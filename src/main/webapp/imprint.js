@@ -114,7 +114,9 @@ IdImprint.prototype =
 {
  getClusterId: function() { return this.clusterId ; },
  getModuleId: function() { return this.moduleId ; },
- getObjectId: function(){ return this.objectId ; }
+ getObjectId: function(){ return this.objectId ; },
+
+ toString: function() { return this.clusterId+":"+this.moduleId+":"+objectId; }
 }
 
 DataBlock = function( data, classes, total )
