@@ -93,7 +93,7 @@ public class ImprintJSONRenderer
    return;
   }
 
-  app.append(indent).append("{");
+  app.append(indent).append("[");
 
   boolean first = true;
 
@@ -117,6 +117,9 @@ public class ImprintJSONRenderer
 
    app.append("\n").append(indent).append("  )");
   }
+  
+  app.append("\n").append(indent).append("]");
+
  }
  
  private static void appendAttributes( AttributedImprint att, Appendable app, String indent) throws IOException
