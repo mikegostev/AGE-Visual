@@ -197,7 +197,7 @@ public class ImprintJSONRenderer
   {
    char ch = str.charAt(cPos);
    
-   if( ch >= 0x27 || ch == ' ' )
+   if( ch != '\n' && ch != '\"' )
     continue;
 
    if( ePos < cPos)
