@@ -81,7 +81,7 @@ public class ObjectImprintViewerWindow extends Window
    setTitle( "Properties of: "+((Value)impr).getStringValue() );
    addItem( new AttributedImprintViewPanelHTML( impr, 1, target1 ) );
   }
-  
+
   addCloseClickHandler( new CloseClickHandler()
   {
    @Override
@@ -93,6 +93,7 @@ public class ObjectImprintViewerWindow extends Window
    }
   });
   
+
   LinkManager.getInstance().addLinkClickListener(target1, new LinkClickListenerJSO()
   {
    @Override
