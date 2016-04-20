@@ -12,6 +12,11 @@ public class MultiValueAttributeImprint implements AttributeImprint, Serializabl
  private List<Value> values = new ArrayList<Value>();
  private ClassImprint classImprint;
 
+ public MultiValueAttributeImprint()
+ {
+ }
+ 
+ @Override
  public Value getValue()
  {
   if( values.size() == 0 )
@@ -26,6 +31,7 @@ public class MultiValueAttributeImprint implements AttributeImprint, Serializabl
   values.add( value );
  }
 
+ @Override
  public void addValue( Value v )
  {
   values.add(v);
@@ -47,11 +53,13 @@ public class MultiValueAttributeImprint implements AttributeImprint, Serializabl
   return values.size();
  }
 
+ @Override
  public ClassImprint getClassImprint()
  {
   return classImprint;
  }
 
+ @Override
  public void setClassImprint(ClassImprint classImprint)
  {
   this.classImprint = classImprint;

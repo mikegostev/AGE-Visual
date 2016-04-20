@@ -12,6 +12,11 @@ public class SingleValueAttributeImprint implements AttributeImprint, Serializab
  private Value value;
  private ClassImprint classImprint;
 
+ public SingleValueAttributeImprint()
+ {
+ }
+ 
+ @Override
  public Value getValue()
  {
   return value;
@@ -28,11 +33,13 @@ public class SingleValueAttributeImprint implements AttributeImprint, Serializab
   return 1;
  }
 
+ @Override
  public ClassImprint getClassImprint()
  {
   return classImprint;
  }
 
+ @Override
  public void setClassImprint(ClassImprint classImprint)
  {
   this.classImprint = classImprint;

@@ -19,12 +19,17 @@ public class RelationImprint implements ObjectImprintReference, AttributedImprin
  private List<AttributeImprint> attrs;
 
  
+ public RelationImprint()
+ {
+ }
+ 
  @Override
  public List<AttributeImprint> getAttributes()
  {
   return attrs;
  }
 
+ @Override
  public void addAttribute( AttributeImprint v )
  {
   if( attrs == null )
@@ -33,6 +38,7 @@ public class RelationImprint implements ObjectImprintReference, AttributedImprin
   attrs.add(v);
  }
  
+ @Override
  public void setAttributes( List<AttributeImprint> vs )
  {
   if( ! (vs instanceof ArrayList) )

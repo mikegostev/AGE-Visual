@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
 
 public class LinkManager
 {
@@ -30,6 +32,17 @@ public class LinkManager
   }
  }-*/;
  
+
+ //else if( Object.prototype.toString.call(val) === '[object Array]')
+//@uk.ac.ebi.age.ui.client.LinkManager::jsLinkClickedJSA(Ljava/lang/String;Lcom/google/gwt/core/client/JsArrayString;)(tgt,val);
+
+ 
+ private static native JsArray castJsArray( JavaScriptObject jso )
+ /*-{
+  return jso;
+ }-*/;
+ ;
+ 
  public static LinkManager getInstance()
  {
   return instance;
@@ -44,10 +57,24 @@ public class LinkManager
  {
   getInstance().linkClickedJSO(linkId, param);
  }
+ 
+ private static void jsLinkClickedJSA( String linkId, JsArrayString param )
+ {
+  getInstance().linkClickedJSA(linkId, param);
+ }
+
 
  private void linkClicked(String linkId, String param)
  {
   LinkClickListener lsn = lsnrs.get(linkId);
+  
+  if( lsn != null )
+   lsn.linkClicked(param);
+ }
+ 
+ private void linkClickedJSA(String linkId, JsArrayString param)
+ {
+  LinkClickListenerJSO lsn = lsnrsJSO.get(linkId);
   
   if( lsn != null )
    lsn.linkClicked(param);
@@ -60,6 +87,7 @@ public class LinkManager
   if( lsn != null )
    lsn.linkClicked(param);
  }
+
 
  
  public void addLinkClickListener( String linkId, LinkClickListener l )

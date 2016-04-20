@@ -51,7 +51,7 @@ public class ObjectImprintViewerWindow extends Window
   setAutoSize( true );
 //  setOverflow(Overflow.SCROLL);
   
-  setStyleName("objectImprintViewerWindow");
+//  setStyleName("objectImprintViewerWindow");
 
  
   addDrawHandler(new DrawHandler()
@@ -121,6 +121,13 @@ public class ObjectImprintViewerWindow extends Window
     
     new ObjectImprintViewerWindow(cAt).show();
    }
+
+   @Override
+   public void linkClicked(JsArrayString param)
+   {
+    // TODO Auto-generated method stub
+    
+   }
   });
   
   LinkManager.getInstance().addLinkClickListener(target2, new LinkClickListenerJSO()
@@ -160,6 +167,13 @@ public class ObjectImprintViewerWindow extends Window
     });
     
 //    System.out.println("Object requested: "+id.get(0)+":"+id.get(1)+":"+id.get(2));
+   }
+
+   @Override
+   public void linkClicked(JsArrayString param)
+   {
+    // TODO Auto-generated method stub
+    
    }
   });
 

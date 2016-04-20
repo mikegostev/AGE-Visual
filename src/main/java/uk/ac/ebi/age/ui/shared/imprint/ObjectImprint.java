@@ -16,6 +16,10 @@ public class ObjectImprint implements AttributedImprint, Serializable
  private List<AttributeImprint> attrs = new ArrayList<AttributeImprint>();
  private List<RelationImprint> rels;
 
+ public ObjectImprint()
+ {
+ }
+ 
  public ClassImprint getClassImprint()
  {
   return classImprint;
@@ -42,11 +46,13 @@ public class ObjectImprint implements AttributedImprint, Serializable
   return attrs;
  }
 
+ @Override
  public void addAttribute( AttributeImprint v )
  {
   attrs.add(v);
  }
  
+ @Override
  public void setAttributes( List<AttributeImprint> vs )
  {
   
